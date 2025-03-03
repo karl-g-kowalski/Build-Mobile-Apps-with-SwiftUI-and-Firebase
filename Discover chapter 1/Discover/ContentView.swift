@@ -9,7 +9,7 @@ struct Place: Identifiable {
 }
 
 struct ContentView: View {
-    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 41.9028, longitude: 12.4964), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+    @State private var region = MapCameraPosition.region( MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 41.9028, longitude: 12.4964), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)))
     
     let annotations = [
         Place(title: "Fontana di Trevi", coordinate: CLLocationCoordinate2D(latitude: 41.900833, longitude: 12.483056), architecte: "Nicola Salvi"),
@@ -19,8 +19,10 @@ struct ContentView: View {
     ]
     
     var body: some View {
-        Map(coordinateRegion: $region, annotationItems: annotations) {
-            MapMarker(coordinate: $0.coordinate)
+        Map(position: $region) {
+            ForEach(annotations) { annotation in
+                Marker( annotation.title, coordinate: annotation.coordinate)
+            }
         }
     }
 }
